@@ -5,6 +5,10 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+if (!process.env.TENANT_ID || !process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
+  throw new Error(`Missing required environment variables: TENANT_ID=${!!process.env.TENANT_ID}, CLIENT_ID=${!!process.env.CLIENT_ID}, CLIENT_SECRET=${!!process.env.CLIENT_SECRET}`);
+}
+
 const credential = new ClientSecretCredential(
   process.env.TENANT_ID,
   process.env.CLIENT_ID,
