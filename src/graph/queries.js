@@ -9,6 +9,23 @@ export async function getUsers() {
   return res.value;
 }
 
+
+
+export async function getEmailInboxOfUser() {
+  try {
+    const res = await graphClient
+      .api("/users/c39040d6-dea4-41e7-986e-2b881baf71a3/messages")
+      .top(10)
+      .select("id,subject,from,receivedDateTime,bodyPreview")
+      .get();
+
+    return res.value;
+  } catch (e) {
+    console.error("Graph error:", e?.statusCode, e?.code, e?.message, e?.body);
+    return null
+  }
+}
+
 export async function searchAll(query) {
   const res = await graphClient
     .api("/search/query")

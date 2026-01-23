@@ -1,5 +1,5 @@
 import express from "express";
-import { getUsers, searchAll } from "../graph/queries.js";
+import { getUsers, searchAll, getEmailInboxOfUser } from "../graph/queries.js";
 
 const router = express.Router();
 
@@ -38,4 +38,17 @@ router.get('/health', async (req, res) => {
   })
 })
 
+router.get("/emailInbox", async (req, res) => {
+  try {
+      const emailInbox = await getEmailInboxOfUser();
+      // const emailInbox = {        msg: 'okokokokok'      };
+      return res.json({ emailInbox });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 export default router;
+
+
