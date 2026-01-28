@@ -22,7 +22,6 @@ export const graphClient = Client.initWithMiddleware({
         "https://graph.microsoft.com/.default"
       );
 
-      console.log("token => ", token)
       return token.token;
     }
   }
