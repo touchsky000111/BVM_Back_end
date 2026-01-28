@@ -1,5 +1,5 @@
 import express from "express";
-import { getUsers, searchAll, getEmailInboxOfUser } from "../graph/queries.js";
+import { getUsers, searchAll, getEmailInboxOfUser, getTeamsId, getTeamMessages } from "../graph/queries.js";
 
 const router = express.Router();
 
@@ -38,9 +38,17 @@ router.get('/health', async (req, res) => {
   })
 })
 
-router.get("/emailInbox", async (req, res) => {
+router.get("/emailInbox/:id?", async (req, res) => {
   try {
-      const emailInbox = await getEmailInboxOfUser();
+    const id =
+      (typeof req.params.id === "string" && req.params.id.trim()) ||
+      (typeof req.query.id === "string" && req.query.id.trim());
+
+    if (!id) {
+      return res.status(400).json({ error: "id is required (path param or ?id=)" });
+    }
+
+    const emailInbox = await getEmailInboxOfUser(id);
       // const emailInbox = {        msg: 'okokokokok'      };
       return res.json({ emailInbox });
   } catch (err) {
@@ -49,6 +57,35 @@ router.get("/emailInbox", async (req, res) => {
   }
 });
 
+
+router.get("/team-id", async (req, res) => {
+  try {
+    const emailInbox = await getTeamsId();
+    return res.json({ emailInbox });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+router.get("/team-messages/:id?", async (req, res) => {
+  try {
+    const id =
+      (typeof req.params.id === "string" && req.params.id.trim()) ||
+      (typeof req.query.id === "string" && req.query.id.trim());
+
+    if (!id) {
+      return res.status(400).json({ error: "id is required (path param or ?id=)" });
+    }
+
+    const teamMessages = await getTeamMessages(id);
+    return res.json({ teamMessages });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
 export default router;
 
 

@@ -11,10 +11,10 @@ export async function getUsers() {
 
 
 
-export async function getEmailInboxOfUser() {
+export async function getEmailInboxOfUser(id) {
   try {
     const res = await graphClient
-      .api("/users/c39040d6-dea4-41e7-986e-2b881baf71a3/messages")
+      .api(`/users/${id}/messages`)
       .top(10)
       .select("id,subject,from,receivedDateTime,bodyPreview")
       .get();
@@ -73,5 +73,18 @@ export async function getSalesInvoices(companyId) {
     .api(`/financials/companies/${companyId}/salesInvoices`)
     .get();
 
+  return res.value;
+}
+
+
+export async function getTeamsId() {
+  console.log("Getting Teams ID ")
+  const res = await graphClient.api(`/teams`).get();
+  return res.value;
+}
+
+export async function getTeamMessages(id) {
+  console.log("Getting Team Messages for ID: ", id)
+  const res = await graphClient.api(`/teams/${id}/channels/`).get();
   return res.value;
 }
